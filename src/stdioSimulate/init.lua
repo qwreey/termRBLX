@@ -1,11 +1,13 @@
 local stdioMeta = {};
 local void = (function() end);
 local emptyStr = "";
-local strLen = utf8.len();
+local strLen = utf8.len;
 local module = {};
 
 function stdioMeta:updateScreen()
-    self.updateFunc(self.outBuffer .. self.prompt .. self.tmpInput);
+    local new = self.outBuffer .. (self.lockInput and "" or self.prompt) .. self.tmpInput;
+    self.lastScreen = new;
+    self.updateFunc(new);
 end
 
 function stdioMeta:clearInput()
@@ -32,27 +34,30 @@ end
 
 -- update in buffer by screen buffer
 -- (read screen and catches input)
-function stdioMeta:updateInBuffer(screenBuffer)
+function stdioMeta:updateBuffer(screenBuffer)
+    local lenNoInput = strLen(self.outBuffer) + strLen(self.prompt);
     if screenBuffer == self.lastScreen then -- nothing changed
         return;
-    elseif screenBuffer == self.outBuffer then -- no input
+    elseif screenBuffer == (self.outBuffer .. self.prompt) then -- no input
         return;
-    elseif strLen(screenBuffer) < strLen(self.outBuffer) then -- overflow input
-        return self:clearInput();
+    elseif strLen(screenBuffer) < lenNoInput then -- de-overflow input
+        self:clearInput();
+        self.curPosFunc(lenNoInput + 2);
+        return;
     elseif self.lockInput then -- locked
         return self:clearInput();
     end
 
-    local input = string.sub(screenBuffer,strLen(self.outBuffer) + 1,-1)
+    local input = string.sub(screenBuffer,lenNoInput + 1,-1)
     if input == emptyStr then -- nothing found
         return self:clearInput();
     end
-
+    self.tmpInput = input;
 end
 
 function stdioMeta:setLockInput(lock)
     self.lockInput = lock;
-    return 1;
+    self:updateScreen();
 end
 
 function stdioMeta:output(str)
@@ -60,7 +65,6 @@ function stdioMeta:output(str)
     self.outBuffer = self.outBuffer .. str;
 
 --    self:
-    return 1;
 end
 
 stdioMeta.__index = stdioMeta;
@@ -79,6 +83,7 @@ function module.new(option)
 
     class.lockInput = option.lockInput or false; ---@deprecated -- input is locked?
     class.updateFunc = option.updateFunc or void; ---@deprecated -- when updated, call this func
+    class.curPosFunc = option.curPosFunc or void; ---@deprecated -- update cursor pos func
 
     setmetatable(class,stdioMeta);
     return class;
