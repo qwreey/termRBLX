@@ -111,7 +111,7 @@ function module.new(Data)
 	-- 마우스 휠 앞/뒤 이벤트 연결
 	-- (차피 RBX 인스턴트들은 Destroy() 호출시 연결된 이벤트가 자동으로 끊김)
 	-- = 따로 연결 끊을 필요 없음
-	Frame.MouseWheelBackward:Connect(function()
+	local function WheelBackward()
 		if MouseWheelDisabled then
 			return
 		end
@@ -124,8 +124,10 @@ function module.new(Data)
 			XScroll and -50,
 			(not XScroll) and -50
 		)
-	end)
-	Frame.MouseWheelForward:Connect(function()
+	end
+	Frame.MouseWheelBackward:Connect(WheelBackward)
+
+	local function WheelForward()
 		if MouseWheelDisabled then
 			return
 		end
@@ -138,7 +140,8 @@ function module.new(Data)
 			XScroll and 50,
 			(not XScroll) and 50
 		)
-	end)
+	end
+	Frame.MouseWheelForward:Connect(WheelForward)
 	
 	-- 홀더 크기 변경됨 (위치 조정)
 	Holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -216,7 +219,11 @@ function module.new(Data)
 		CheckInputEndedConnect = UserInputService.InputEnded:Connect(CheckInputEnded)
 	end)
 	
-	return Frame,setmetatable({},{
+	return Frame,setmetatable({
+		Scroll = Scroll;
+		WheelForward = WheelForward;
+		WheelBackward = WheelBackward;
+	},{
 		__index = function(self,Key)
 			if Key == "XMaxOverScroll" then
 				return XMaxOverScroll

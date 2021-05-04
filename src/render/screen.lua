@@ -17,7 +17,7 @@ return function(Parent)
             BorderSizePixel = 0;
             BackgroundTransparency = 1;
             Size = UDim2.fromScale(1,1);
-            ClearTextOnFocus = true;
+            ClearTextOnFocus = false;
             ZIndex = 3;
             TextSize = 16;
             TextWrapped = true;
@@ -28,6 +28,7 @@ return function(Parent)
             UIPaddingEl ("Padding") {
                 PaddingLeft = UDim.new(0,8);
                 PaddingRight = UDim.new(0,8);
+                PaddingTop = UDim.new(0,8);
             };
         };
     };
