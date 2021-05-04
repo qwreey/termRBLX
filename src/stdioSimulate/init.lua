@@ -5,7 +5,7 @@ local strLen = utf8.len();
 local module = {};
 
 function stdioMeta:updateScreen()
-    self.updateFunc(self.outBuffer .. self.tmpInput);
+    self.updateFunc(self.outBuffer .. self.prompt .. self.tmpInput);
 end
 
 function stdioMeta:clearInput()
@@ -72,6 +72,7 @@ function module.new(option)
     class.tmpInput = option.tmpInput or ""; ---@deprecated -- for handle input
     class.lastScreen = option.lastScreen or ""; ---@deprecated -- save last screen
     class.lastInput = option.lastInput or ""; ---@deprecated -- save last input
+    class.prompt = option.prompt or ""; ---@deprecated -- save last input
 
     class.maxLines = option.maxLines or 1024; ---@deprecated -- max lines
     class.lineBuffer = option.lineBuffer or {}; ---@deprecated -- for handle lines
