@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local module = {}
 function module:RippleContainer(RoundSize)
 	if type(RoundSize) ~= "number" then

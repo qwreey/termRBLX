@@ -1,3 +1,6 @@
+---@diagnostic disable:undefined-global
+---@diagnostic disable:undefined-field
+
 local module = {}
 
 -- Roblox service load

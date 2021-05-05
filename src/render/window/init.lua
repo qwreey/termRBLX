@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local UserInputService  = game:GetService("UserInputService")
 
 local MaterialUI    = require(script.Parent:WaitForChild("MaterialUI"   ))
@@ -50,7 +52,11 @@ local WindowClass = {
 			WhenCreated = function(this)
 				Store.Gui = this
 				wait()
-				MaterialUI:Draw(this)
+				if WindowInfo.Parent then
+					this.Parent = WindowInfo.Parent
+				else
+					MaterialUI:Draw(this)
+				end
 			end;
 			DisplayOrder = StartWindowIndex;
 		},{

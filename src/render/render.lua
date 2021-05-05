@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local module = {};
 
 local function new(ClassName,prop)

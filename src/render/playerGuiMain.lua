@@ -1,12 +1,14 @@
-return function ()
+---@diagnostic disable:undefined-global
+
+return function (env)
     local windowClass = require(script.Parent.window);
     local window = windowClass.new({
         WindowRoundSize = 8;
-        WindowID = "game.ui.TERMRBLX_" .. tostring(math.random(10000,99999));
-        WindowTitle = "Terminal | RBLX";
+        WindowID = env.id or ("game.ui.TERMRBLX_" .. tostring(math.random(10000,99999)));
+        WindowTitle = env.title or "Terminal | RBLX";
         WindowSize = {X = 500,Y = 320};
         WindowMinSize = {X = 220,Y = 220};
-        WindowIcon = "http://www.roblox.com/asset/?id=6031075938";
+        WindowIcon = env.icon or "http://www.roblox.com/asset/?id=6031075938";
         WindowIconSize = 30;
         ShadowSize = {X = 8,T = 8,B = 12};
         ShadowIndex = -50;
@@ -16,6 +18,7 @@ return function ()
         AppFont = Enum.Font.Gotham;
         CloseButtonDisabled = true;
         Resizable = true;
+        Parent = env.holder;
         Colors = {
             Background = Color3.fromRGB(55, 55, 65);
             TopBar = Color3.fromRGB(55, 55, 65);
@@ -49,13 +52,24 @@ return function ()
     end);
 
     -- set texts size
+    local lastWinsizeY = math.huge;
     local function refreshScrollSize()
         local winHolderSize = window.Holder.AbsoluteSize.Y;
         local textScreenSize = termScreen.TextScreen.TextBounds.Y + 8 + termScreen.TextScreen.TextSize;
+        local winsizeY = math.max(winHolderSize,textScreenSize);
+        holder.Holder.Size = UDim2.new(1,0,0,winsizeY);
 
-        holder.Holder.Size = UDim2.new(1,0,0,math.max(winHolderSize,textScreenSize));
+        -- set scroll pos
+        if winHolderSize ~= winsizeY then
+            local change = winsizeY - lastWinsizeY;
+            if change > 0 then
+                customScroll.Scroll(0,-change -6);
+            end
+            lastWinsizeY = winsizeY;
+        end
     end
     termScreen.TextScreen:GetPropertyChangedSignal("TextBounds"):Connect(refreshScrollSize);
+    window.Holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(refreshScrollSize);
 
     return {
         TextScreen = termScreen.TextScreen;

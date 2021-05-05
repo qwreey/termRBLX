@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local IsRoblox = version and version() or nil
 
 -- 로블록스 이외의 다른 lua 플렛폼을 위한 바인드 스탭,

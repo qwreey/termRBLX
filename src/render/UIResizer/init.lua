@@ -1,3 +1,6 @@
+---@diagnostic disable:undefined-global
+---@diagnostic disable:undefined-field
+
 local module = {}
 
 local MouseTracker = game.Players.LocalPlayer.PlayerGui:FindFirstChild("MouseTracker") or Instance.new("ScreenGui",game.Players.LocalPlayer.PlayerGui)

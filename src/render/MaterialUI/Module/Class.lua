@@ -1,3 +1,6 @@
+---@diagnostic disable:undefined-global
+---@diagnostic disable:unbalanced-assignments
+
 local module = {}
 
 function module:MakeDictionary(Old,IsProperties)

@@ -1,3 +1,4 @@
+---@diagnostic disable:undefined-global
 local module = {}
 
 function module:GetRippleSize(Obj,Mouse)

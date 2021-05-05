@@ -7,7 +7,7 @@ local strLen = utf8.len;
 function module.new(textbox,stdio)
     -- update editable status
     local function update()
-        local outBufferSize = strLen(stdio.outBuffer) + strLen(stdio.prompt);
+        local outBufferSize = strLen(stdio.outBuffer) + strLen(stdio.prompt) - 1;
         local selectionStart = textbox.SelectionStart;
         textbox.TextEditable = (textbox.CursorPosition > outBufferSize) and
         (selectionStart == -1 or (textbox.SelectionStart > outBufferSize));

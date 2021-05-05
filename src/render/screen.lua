@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local render = require(script.Parent.render);
 if not true then render = require("src.render.render"); end
 
