@@ -7,7 +7,7 @@ local strLen = utf8.len;
 function module.new(textbox,stdio)
     -- update editable status
     local function update()
-        local outBufferSize = strLen(stdio.outBuffer) + strLen(stdio.prompt) - 1;
+        local outBufferSize = strLen(stdio.withoutInput) - 1;
         local selectionStart = textbox.SelectionStart;
         textbox.TextEditable = (textbox.CursorPosition > outBufferSize) and
         (selectionStart == -1 or (textbox.SelectionStart > outBufferSize));
@@ -16,6 +16,7 @@ function module.new(textbox,stdio)
     -- sync event
     textbox:GetPropertyChangedSignal("CursorPosition"):Connect(update);
     textbox:GetPropertyChangedSignal("SelectionStart"):Connect(update);
+    textbox:GetPropertyChangedSignal("Text"):Connect(update);
     return;
 end
 

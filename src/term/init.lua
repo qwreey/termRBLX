@@ -5,6 +5,9 @@ local module = {};
 function module.new(settings)
     local TextScreen = settings.TextScreen;
     local info = settings.info;
+    settings.path = settings.env.path or game;
+    settings.toPath = require(script.Parent.utils.instanceToPath);
+    settings.toInstance = require(script.Parent.utils.pathToInstance);
 
     -- new stdio simulate
     settings.stdioSimulate = settings.stdioSimulate.new {
@@ -16,15 +19,20 @@ function module.new(settings)
             TextScreen.Text = text;
         end;
         curPosSet = function (curPos)
-            spawn(function ()
-                wait();
-                TextScreen.CursorPosition = curPos;
-                TextScreen.SelectionStart = -1;
-            end);
+            TextScreen.CursorPosition = curPos;
+            TextScreen.SelectionStart = -1;
+            --end);
         end;
+        addCurPos = function (move)
+            TextScreen.CursorPosition = TextScreen.CursorPosition + move;
+            TextScreen.SelectionStart = -1;
+        end
     };
     local stdioSimulate = settings.stdioSimulate;
-    local block = (not settings.env.disableBlock) and require(script.blockInput).new(settings.TextScreen,settings.stdioSimulate);
+    local block = (not settings.env.disableBlock) and require(script.blockInput).new(settings.TextScreen,stdioSimulate);
+    settings.output = function (text)
+        stdioSimulate:output(text);
+    end;
 
     -- catch text changed
     local function update()
@@ -33,10 +41,27 @@ function module.new(settings)
     TextScreen:GetPropertyChangedSignal("Text"):Connect(update);
     update();
 
-    -- execute input
-    local function exe(input)
-        print(input)
+    -- load commands
+    local cmds = {};
+    local function loadCmd(t)
+        for _,name in pairs(t.names) do
+            cmds[name] = t;
+        end
     end
+    local customCmds = settings.cmds;
+    if customCmds then
+        for _,v in pairs(customCmds) do
+            loadCmd(v);
+        end
+    end
+    for _,cmdModule in pairs(script.Parent.cmds:GetChildren()) do
+        loadCmd(require(cmdModule));
+    end
+    settings.loadCmd = loadCmd;
+    settings.cmds = cmds;
+
+    -- execute input
+    local exe = require(script.exe).init(settings);
 
     -- catch enter
     TextScreen.FocusLost:Connect(function (enter)
@@ -46,8 +71,10 @@ function module.new(settings)
 
         local input = stdioSimulate:returnInput();
         wait(); TextScreen:CaptureFocus();
-        exe(input); return;
+        exe:run(input); return;
     end);
+
+    return settings;
 end
 
 return module;

@@ -18,7 +18,7 @@ return function(Parent)
         TextBoxEl ("TextScreen") {
             BorderSizePixel = 0;
             BackgroundTransparency = 1;
-            Size = UDim2.fromScale(1,1);
+            Size = UDim2.new(1,0,1,300);
             ClearTextOnFocus = false;
             ZIndex = 3;
             TextSize = 16;

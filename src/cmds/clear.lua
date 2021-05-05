@@ -1,6 +1,9 @@
+---@diagnostic disable:undefined-global
+
 return {
-    alias = {"cls"};
+    names = {"clear","cls"};
     exe = function (str,content)
-        content.handle.clear();
+        content.stdioSimulate.outBuffer = "";
+        content.stdioSimulate:updateScreen();
     end;
 };

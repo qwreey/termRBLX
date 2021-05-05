@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+
 local stdioMeta = {};
 local void = (function() end);
 local emptyStr = "";
@@ -5,7 +7,9 @@ local strLen = string.len;--utf8.len;
 local module = {};
 
 function stdioMeta:updateScreen()
-    local new = self.outBuffer .. (self.lockInput and "" or self.prompt) .. self.tmpInput;
+    local withoutInput = self.outBuffer .. (self.lockInput and "" or self.prompt)
+    self.withoutInput = withoutInput;
+    local new = withoutInput .. self.tmpInput;
     self.lastScreen = new;
     self.updateFunc(new);
 end
@@ -37,7 +41,10 @@ end
 function stdioMeta:updateBuffer(screenBuffer)
     local screenBufferLen = strLen(screenBuffer);
     local lenNoInput = strLen(self.outBuffer) + strLen(self.prompt);
-    if screenBuffer == self.lastScreen then -- nothing changed
+    if self.lockInput then -- locked
+        self:clearInput();
+        return;
+    elseif screenBuffer == self.lastScreen then -- nothing changed
         return;
     elseif screenBuffer == (self.outBuffer .. self.prompt) then -- no input
         self.tmpInput = emptyStr;
@@ -46,9 +53,6 @@ function stdioMeta:updateBuffer(screenBuffer)
     elseif screenBufferLen < lenNoInput then -- overflow input to output
         self:clearInput();
         self.curPosSet(lenNoInput + 1);
-        return;
-    elseif self.lockInput then -- locked
-        self:clearInput();
         return;
     end
 
@@ -72,15 +76,20 @@ function stdioMeta:updateBuffer(screenBuffer)
 end
 
 function stdioMeta:setLockInput(lock)
+    if self.lockInput == lock then
+        return;
+    end
     self.lockInput = lock;
+    self.addCurPos(#self.prompt * (lock and -1 or 0));
     self:updateScreen();
+    self.addCurPos(#self.prompt * (lock and 0 or 1));
 end
 
 function stdioMeta:output(str)
-    self:stackLine(str);
+    --self:stackLine(str);
     self.outBuffer = self.outBuffer .. str;
-
---    self:
+    self:updateScreen();
+    self.addCurPos(#str);
 end
 
 stdioMeta.__index = stdioMeta;
@@ -92,6 +101,7 @@ function module.new(option)
     class.tmpInput = option.tmpInput or ""; ---@deprecated -- for handle input
     class.lastScreen = option.lastScreen or ""; ---@deprecated -- save last screen
     class.prompt = option.prompt or ""; ---@deprecated -- save last input
+    class.withoutInput = ""; ---@deprecated -- save last screen without input
 
     class.maxLines = option.maxLines or 12; --516; ---@deprecated -- max lines
     class.lineBuffer = option.lineBuffer or {}; ---@deprecated -- for handle lines
@@ -99,6 +109,7 @@ function module.new(option)
     class.lockInput = option.lockInput or false; ---@deprecated -- input is locked?
     class.updateFunc = option.updateFunc or void; ---@deprecated -- when updated, call this func
     class.curPosSet = option.curPosSet or void; ---@deprecated -- update cursor pos func
+    class.addCurPos = option.addCurPos or void; ---@deprecated -- update cursor with relative pos func
 
     setmetatable(class,stdioMeta);
     return class;
