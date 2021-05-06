@@ -4,7 +4,7 @@ return function (content) return function (ins)
 
     while true do
         if not ins then
-            local nullId = content.NULL[ins];
+            local nullId = content.NULL[lins];
             if nullId then
                 path = "\\NULL\\" .. nullId .. lpath;
             else

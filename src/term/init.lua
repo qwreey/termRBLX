@@ -5,6 +5,8 @@ local module = {};
 function module.new(settings)
     local TextScreen = settings.TextScreen;
     local info = settings.info;
+    settings.sysDebug = "";
+    settings.sysDebugHook = settings.sysDebugHook;
     settings.path = settings.env.path or game;
     settings.NULL = {};
     settings.VAR = {};
@@ -17,6 +19,7 @@ function module.new(settings)
 
     -- new stdio simulate
     settings.stdioSimulate = settings.stdioSimulate.new {
+        -- screen updater / screen init
         outBuffer = ("termRBLX (Version %s)\nmore info for : https://github.com/qwreey75/RbxTermi\n\n"):format(
             info.version
         );
@@ -24,10 +27,11 @@ function module.new(settings)
         updateFunc = function (text)
             TextScreen.Text = text;
         end;
-        curPosSet = function (curPos)
+
+        -- cursor handle
+        setCurPos = function (curPos)
             TextScreen.CursorPosition = curPos;
             TextScreen.SelectionStart = -1;
-            --end);
         end;
         addCurPos = function (move)
             TextScreen.CursorPosition = TextScreen.CursorPosition + move;
@@ -37,7 +41,7 @@ function module.new(settings)
     local stdioSimulate = settings.stdioSimulate;
     local block = (not settings.env.disableBlock) and require(script.blockInput).new(settings.TextScreen,stdioSimulate);
     settings.output = function (text)
-        stdioSimulate:output(text);
+        stdioSimulate:addOutput(text);
     end;
 
     -- catch text changed
@@ -61,7 +65,16 @@ function module.new(settings)
         end
     end
     for _,cmdModule in pairs(script.Parent.cmds:GetChildren()) do
-        loadCmd(require(cmdModule));
+        local pass,cmd = pcall(require,cmdModule);
+        if pass then
+            loadCmd(cmd);
+        else
+            settings.output(
+                ("loading command '%s' was failed, please check command module/script/path is exist and make sure command have no errors\nError Info : %s\n\n"):format(
+                    cmdModule.Name,cmd
+                )
+            );
+        end
     end
     settings.loadCmd = loadCmd;
     settings.cmds = cmds;

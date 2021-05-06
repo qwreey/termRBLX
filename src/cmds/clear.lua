@@ -5,7 +5,6 @@ return {
     info = "clear screen (set stdout to \"\" and refresh screen)";
     use = "cd [dir] [option]";
     exe = function (str,content,self,cmdprefix)
-        content.stdioSimulate.outBuffer = "";
-        content.stdioSimulate:updateScreen();
+        content.stdioSimulate:clearOutput();
     end;
 };
