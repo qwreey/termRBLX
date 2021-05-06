@@ -20,7 +20,7 @@ function module.new(settings)
     -- new stdio simulate
     settings.stdioSimulate = settings.stdioSimulate.new {
         -- screen updater / screen init
-        outBuffer = ("termRBLX (Version %s)\nmore info for : https://github.com/qwreey75/RbxTermi\n\n"):format(
+        output = ("termRBLX (Version %s)\nmore info for : https://github.com/qwreey75/RbxTermi\n\n"):format(
             info.version
         );
         prompt = "@termRBLX $ ";
