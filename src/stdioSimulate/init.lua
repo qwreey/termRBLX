@@ -98,7 +98,7 @@ function stdioMeta:addOutput(str) -- add output
     self.output = output;
     self:updateScreen();
     self.addCurPos(#str);
-    class.outputHook(output);
+    self.outputHook(output);
 end
 function stdioMeta:setOutput(str) -- set output
     self.outputAddHook(str);
@@ -106,7 +106,7 @@ function stdioMeta:setOutput(str) -- set output
     self.output = str;
     self:updateScreen();
     self.addCurPos(cur);
-    class.outputHook(str);
+    self.outputHook(str);
 end
 function stdioMeta:getOutput() -- get output
     return self.output or emptyStr;
@@ -115,7 +115,7 @@ function stdioMeta:clearOutput() -- clear output
     self.output = emptyStr;
     self:updateScreen();
     self.setCurPos(#self.lastScreen);
-    class.outputHook(emptyStr);
+    self.outputHook(emptyStr);
 end
 
 function module.new(option)
