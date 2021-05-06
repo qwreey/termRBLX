@@ -2,23 +2,19 @@
 
 return {
     names = {"cd","cdir","cwd","chdir","chd","chwd"};
-    exe = function (str,content)
-        str = string.match(str,"^%s+(.+)");
-
-        local tmp,sum = "",nil;
-        for sp in string.gmatch(str,"[^$s]+") do
-            if not sum then
-                sum = sp;
-            else
-                local epos = string.find(sp,"\\");
-                if epos then
-                    
-                else
-                    tmp = tmp .. "\32" .. sp;
-                end
-            end
-        end
-
+    info = "change working directory (cwd)";
+    use = "cd [dir] [option]";
+    help = [[
+        move to game directory : cd \game
+        move to parent directory : cd ..
+        move to child directory : cd childName
+        move to directory that includeds space : cd .\ like this\
+        move to Workspace : cd \game\Workspace
+        move with var : cd %client%\PlayerGui
+    ]];
+    exe = function (str,content,self,cmdprefix)
+        local str,opt = content.splitDirOpt(str);
+        str = str or "";
         local path;
         if string.sub(str,1,2) == ".\\" then
             path = content.path;
@@ -36,7 +32,11 @@ return {
             path = content.path;
         end
         str = "\\" .. str;
-        content.path = content.toInstance(content.toPath(path) .. str);
+        local npath,err = content.toInstance(content.toPath(path) .. str,true);
+        content.path = err and content.path or npath;
         content.output(content.toPath(content.path) .. "\n\n");
+        if err then
+            content.error("could not be found path");
+        end
     end;
 };

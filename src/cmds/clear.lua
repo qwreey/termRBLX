@@ -2,7 +2,9 @@
 
 return {
     names = {"clear","cls"};
-    exe = function (str,content)
+    info = "clear screen (set stdout to \"\" and refresh screen)";
+    use = "cd [dir] [option]";
+    exe = function (str,content,self,cmdprefix)
         content.stdioSimulate.outBuffer = "";
         content.stdioSimulate:updateScreen();
     end;

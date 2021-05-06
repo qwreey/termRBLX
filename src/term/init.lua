@@ -6,8 +6,14 @@ function module.new(settings)
     local TextScreen = settings.TextScreen;
     local info = settings.info;
     settings.path = settings.env.path or game;
-    settings.toPath = require(script.Parent.utils.instanceToPath);
-    settings.toInstance = require(script.Parent.utils.pathToInstance);
+    settings.NULL = {};
+    settings.VAR = {};
+    settings.toPath = require(script.Parent.utils.instanceToPath)(settings);
+    settings.toInstance = require(script.Parent.utils.pathToInstance)(settings);
+    settings.splitDirOpt = require(script.Parent.utils.splitDirOpt);
+    settings.makeSeed = require(script.Parent.utils.makeSeed);
+    settings.makeId = require(script.Parent.utils.makeId);
+    settings.nullHandle = require(script.Parent.utils.nullHandle)(settings);
 
     -- new stdio simulate
     settings.stdioSimulate = settings.stdioSimulate.new {
@@ -62,6 +68,9 @@ function module.new(settings)
 
     -- execute input
     local exe = require(script.exe).init(settings);
+    settings.exe = function (str)
+        exe:run(str);
+    end
 
     -- catch enter
     TextScreen.FocusLost:Connect(function (enter)
