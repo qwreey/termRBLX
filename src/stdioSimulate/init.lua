@@ -104,8 +104,13 @@ function stdioMeta:setOutput(str) -- set output
     self.outputAddHook(str);
     local cur = #str - #self.output;
     self.output = str;
+    if cur < 0 then
+        self.addCurPos(cur);
+    end
     self:updateScreen();
-    self.addCurPos(cur);
+    if cur > 0 then
+        self.addCurPos(cur);
+    end
     self.outputHook(str);
 end
 function stdioMeta:getOutput() -- get output
