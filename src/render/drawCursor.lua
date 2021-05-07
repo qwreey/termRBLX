@@ -2,6 +2,7 @@
 
 local render = require(script.Parent.render);
 local AdvancedTween = require(script.Parent.AdvancedTween);
+local TextService = game:GetService("TextService");
 local FrameEl = render.Import("Frame");
 return function update(box)
     local selCur,posCur,str = box.CursorPosition,box.SelectionStart,box.Text;
@@ -36,13 +37,29 @@ return function update(box)
         BackgroundTransparency = 0.1;
     };
 
-    if posCur == -1 then
+    if posCur == -1 then -- hide
         curStart.Visible = false;
         curEnd.Visible = false;
         curMid.Visible = false;
         cur.Visible = false;
     else
+        local strFront = string.sub(str,1,posCur);
+
+        -- set point cur pos
+        local curUDim2 = UDim2.fromOffset()
+        if cur.Visible then
+            AdvancedTween:RunTween(cur,{
+                Time = 0.3;
+                Easing = AdvancedTween.EasingFunctions.Exp2;
+                Direction = AdvancedTween.EasingDirection.Out;
+            },{
+                Position = curUDim2;
+            });
+        else
+            cur.Position = curUDim2;
+        end
         cur.Visible = true;
+
         cur.Size = UDim2.fromOffset(box.TextSize,2);
         if selCur == -1 then
             curStart.Visible = false;
