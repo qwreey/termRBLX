@@ -20,7 +20,7 @@ return function(Parent)
             BackgroundTransparency = 1;
             Size = UDim2.new(1,0,1,300);
             ClearTextOnFocus = false;
-            ZIndex = 3;
+            ZIndex = 4;
             TextSize = 16;
             TextWrapped = true;
             Font = Enum.Font.Code;
