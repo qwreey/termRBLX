@@ -14,6 +14,7 @@ function module.init(env)
         error(("Runtime %s was not found!"):format(tostring(env.runtimeType)));
     end
     local runtime = require(runtimeModule)(env);
+    return runtime;
 end
 
 return module;
