@@ -1,3 +1,4 @@
+---@diagnostic disable:undefined-global
 return function (content) return function (ins)
     local path = "";
     local lins,lpath = "","";

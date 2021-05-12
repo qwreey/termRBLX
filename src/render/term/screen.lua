@@ -1,7 +1,7 @@
 ---@diagnostic disable:undefined-global
 
 local render = require(script.Parent.render);
-if not true then render = require("src.render.render"); end
+if not true then render = require("src.render.term.render"); end
 
 local FrameEl = render.Import("Frame");
 local TextBoxEl = render.Import("TextBox");

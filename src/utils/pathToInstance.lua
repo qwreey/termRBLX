@@ -1,3 +1,5 @@
+---@diagnostic disable:undefined-global
+---@diagnostic disable:undefined-field
 return function (content) return function (path,returnErr)
     local ins = nil;
     local deep = 0;

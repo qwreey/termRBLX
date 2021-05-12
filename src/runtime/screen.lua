@@ -1,7 +1,7 @@
 ---@diagnostic disable:undefined-global
 return function (env)
     local info = require(script.Parent.Parent.info); -- get termRBLX info
-    local uiHost = require(script.Parent.Parent.render.playerGuiMain)(env); -- setup uiHost
+    local uiHost = require(script.Parent.Parent.render.screenMain)(env); -- setup uiHost
     local TextScreen = uiHost.TextScreen; -- get text screen
 
     -- setup std in/out put host
