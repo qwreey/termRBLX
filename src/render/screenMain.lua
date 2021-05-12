@@ -42,7 +42,7 @@ return function (env)
         end
     end
     termScreen.TextScreen:GetPropertyChangedSignal("TextBounds"):Connect(refreshScrollSize);
-    window.Holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(refreshScrollSize);
+    holder.Holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(refreshScrollSize);
 
     return {
         TextScreen = termScreen.TextScreen;
