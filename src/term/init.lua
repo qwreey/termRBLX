@@ -23,7 +23,7 @@ function module.new(settings)
         output = ("termRBLX (Version %s)\nmore info for : https://github.com/qwreey75/RbxTermi\n\n"):format(
             info.version
         );
-        prompt = "@termRBLX $ ";
+        prompt = settings.env.prompt or "@termRBLX $ ";
         updateFunc = function (text)
             TextScreen.Text = text;
         end;
