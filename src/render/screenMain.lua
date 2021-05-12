@@ -27,7 +27,7 @@ return function (env)
     -- set texts size
     local lastWinsizeY = math.huge;
     local function refreshScrollSize()
-        local winHolderSize = window.Holder.AbsoluteSize.Y;
+        local winHolderSize = holder.AbsoluteSize.Y;
         local textScreenSize = termScreen.TextScreen.TextBounds.Y + 8 + termScreen.TextScreen.TextSize;
         local winsizeY = math.max(winHolderSize,textScreenSize);
         holder.Holder.Size = UDim2.new(1,0,0,winsizeY);
@@ -42,7 +42,7 @@ return function (env)
         end
     end
     termScreen.TextScreen:GetPropertyChangedSignal("TextBounds"):Connect(refreshScrollSize);
-    holder.Holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(refreshScrollSize);
+    holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(refreshScrollSize);
 
     return {
         TextScreen = termScreen.TextScreen;
