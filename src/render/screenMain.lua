@@ -5,7 +5,7 @@ return function (env)
     local holder,customScroll = require(script.Parent.CustomScroll).new {
         DragToScrollDisabled = true;
     };
-    holder.Parent = env.Parent;
+    holder.Parent = env.holder;
     holder.Holder.Size = UDim2.fromScale(1,1);
 
     -- make term screen
