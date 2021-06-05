@@ -6,7 +6,7 @@ function module.new(settings)
     local TextScreen = settings.TextScreen;
     local info = settings.info;
     settings.sysDebug = "";
-    settings.sysDebugHook = settings.sysDebugHook;
+    settings.sysDebugHook = settings.sysDebugHook or function()end;
     settings.path = settings.env.path or game;
     settings.NULL = {};
     settings.VAR = {};
@@ -16,6 +16,7 @@ function module.new(settings)
     settings.makeSeed = require(script.Parent.utils.makeSeed);
     settings.makeId = require(script.Parent.utils.makeId);
     settings.nullHandle = require(script.Parent.utils.nullHandle)(settings);
+    settings.commandArgDecode = require(script.Parent.utils.commandArgDecode).decode;
 
     -- new stdio simulate
     settings.stdioSimulate = settings.stdioSimulate.new {
