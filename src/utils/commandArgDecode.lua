@@ -3,7 +3,7 @@
     # Author        : Qwreey / qwreey75@gmail.com / github:qwreey75
     # Create Time   : 2021-05-21 21:43:18
     # Modified by   : Qwreey
-    # Modified time : 2021-06-05 16:21:48
+    # Modified time : 2021-07-29 22:41:39
     # Description   : |
         Time format = yyy-mm-dd hh:mm:ss
         Time zone = GMT+9
@@ -13,6 +13,8 @@
 
         CLI option,arg decoder
   ]]
+
+-- 이 코드는 최적화가 필요합니다
 
 local module = {};
 
